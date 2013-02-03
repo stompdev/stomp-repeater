@@ -7,7 +7,7 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.Map;
 
-public class Test implements Listener {
+public class TestNoDebug implements Listener {
 
     /* nazwa hosta serwera */
     private static final String SERVER_HOST = "127.0.0.1";
@@ -29,21 +29,10 @@ public class Test implements Listener {
 
     private static Client client;
 
-    /* Loger */
-    private static Logger logger;
-
-    static {
-        logger = Logger.getLogger(Test.class);
-        PropertyConfigurator.configure("log4j.properties");
-    }
-
     @Override
     public void message(Map arg0, String messageBody) {
-        logger.info("Received new message: " + messageBody);
-
-        client.send(OUT_QUEUE, messageBody);
-
-        logger.info("Sent message: " + messageBody);
+        System.err.println("0;" + System.currentTimeMillis() + ";" + messageBody.length());
+        client.send(IN_QUEUE, messageBody);
     }
 
     public static void main(String args[]) {
@@ -54,8 +43,8 @@ public class Test implements Listener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Test t = new Test();
-        client.subscribe(IN_QUEUE, t);
+        TestNoDebug t = new TestNoDebug();
+        client.subscribe(OUT_QUEUE, t);
     }
 
 }
